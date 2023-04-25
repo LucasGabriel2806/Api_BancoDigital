@@ -1,6 +1,6 @@
 <?php
 
-namespace Api_BancoDigital\Model;
+namespace App\Model;
 
 use Exception;
 
