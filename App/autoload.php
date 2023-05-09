@@ -10,7 +10,7 @@
  * Função sql_autoload_register => https://www.php.net/manual/pt_BR/function.spl-autoload-register.php
  * Funções Anônimas => https://www.php.net/manual/pt_BR/functions.anonymous.php
  */
-spl_autoload_register(function ($nome_da_classe) 
+spl_autoload_register(function ($nome_da_classe)
 {
     /**
      * Hack: Trocando a posição da barra para que funcione em servidores Linux.
