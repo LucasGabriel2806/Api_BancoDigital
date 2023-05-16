@@ -1,13 +1,22 @@
 <?php
 
-use App\Controller\CorrentistaController; 
-use App\Controller\ContaController;
+use Api\Controller\CorrentistaController; 
+use Api\Controller\ContaController;
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 switch ($url) 
 {
-    case '/correntista/save':
+    case '/correntista':
+        CorrentistaController::listar();
+    break;
+
+    case '/correntista/buscar':
+        CorrentistaController::buscar();
+    break;
+    
+
+    case '/correntista/salvar':
         CorrentistaController::salvar();
     break;
     

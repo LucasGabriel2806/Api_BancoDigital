@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DAO;
+namespace Api\DAO;
 
-use App\Model\CorrentistaModel;
+use Api\Model\CorrentistaModel;
 
 /**
  * 
@@ -27,7 +27,7 @@ class CorrentistaDAO extends DAO
         $stmt = $this->conexao->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetchAll(DAO::FETCH_CLASS, "App\Model\CorrentistaModel");
+        return $stmt->fetchAll(DAO::FETCH_CLASS, "Api\Model\CorrentistaModel");
     }
 
     /**
@@ -42,7 +42,7 @@ class CorrentistaDAO extends DAO
         $stmt = $this->conexao->prepare($sql);
         $stmt->execute($str_query);
 
-        return $stmt->fetchAll(DAO::FETCH_CLASS, "App\Model\CorrentistaModel");
+        return $stmt->fetchAll(DAO::FETCH_CLASS, "Api\Model\CorrentistaModel");
     }
 
     /**

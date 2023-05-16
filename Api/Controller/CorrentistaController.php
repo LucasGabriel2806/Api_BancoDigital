@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace Api\Controller;
 
-use App\Model\CorrentistaModel;
+use Api\Model\CorrentistaModel;
 use Exception;
 
 

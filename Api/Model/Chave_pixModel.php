@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace Api\Model;
 
 
 class Chave_pixModel extends Model 

@@ -8,7 +8,7 @@
  * Leia mais sobre namespaces => http://www.diogomatheus.com.br/blog/php/entendendo-namespaces-no-php/
  * Namespaces no manual => https://www.php.net/manual/pt_BR/language.namespaces.rationale.php
  */
-namespace App\Controller;
+namespace Api\Controller;
 
 use Exception;
 

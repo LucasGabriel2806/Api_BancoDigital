@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace Api\Controller;
 
 class TransacaoController extends Controller 
 {

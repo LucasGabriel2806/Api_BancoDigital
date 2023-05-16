@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Model;
+namespace Api\Model;
 
-use App\DAO\CorrentistaDAO;
+use Api\DAO\CorrentistaDAO;
 
 /**
  * A camada model é responsável por transportar os dados da Controller até a DAO e vice-versa.
