@@ -1,95 +1,113 @@
 <?php
 
-namespace Api\DAO;
+namespace App\DAO;
 
-use Api\Model\CorrentistaModel;
+use App\Model\CorrentistaModel;
+use PDO;
 
 /**
- * 
+ * As classes DAO (Data Access Object) são responsáveis por executar os
+ * SQL junto ao banco de dados.
  */
 class CorrentistaDAO extends DAO
 {
-    /**
-     * 
+     /**
+     * Método construtor, sempre chamado na classe quando a classe é instanciada.
+     * Exemplo de instanciar classe (criar objeto da classe):
+     * $dao = new PessoaDAO();
      */
     public function __construct()
     {
+        /**
+         * Chamando o construtor da classe DAO, isto é, toda vez que chamos o consturo da classe DAO
+         * estamos fazendo a conexão com o banco de dados.
+         */
         parent::__construct();       
     }
 
     /**
      * 
      */
-    public function select() : array
+    public function save(CorrentistaModel $m) : CorrentistaModel
     {
-        $sql = "SELECT * FROM correntista ";
+        return ($m->id == null) ? $this->insert($m) : $this->update($m);
+    }
 
+
+    /**
+     * Método que recebe um model e extrai os dados do model para realizar o insert
+     * na tabela correspondente ao model. Note o tipo do parâmetro declarado.
+     */
+    private function insert(CorrentistaModel $model)
+    {
+        // Trecho de código SQL com marcadores ? para substituição posterior, no prepare
+        $sql = "INSERT INTO correntista
+                            (nome, email, cpf, data_nascimento, senha) 
+                VALUES 
+                            (?, ?, ?, ?, sha1(?) ) ";
+
+        // Declaração da variável stmt que conterá a montagem da consulta. Observe que
+        // estamos acessando o método prepare dentro da propriedade que guarda a conexão
+        // com o MySQL, via operador seta "->". Isso significa que o prepare "está dentro"
+        // da propriedade $conexao e recebe nossa string sql com os devidor marcadores.
+        // Para saber mais sobre Preparated Statements, leia: https://www.codigofonte.com.br/artigos/evite-sql-injection-usando-prepared-statements-no-php
         $stmt = $this->conexao->prepare($sql);
+
+
+        // Nesta etapa os bindValue são responsáveis por receber um valor e trocar em uma 
+        // determinada posição, ou seja, o valor que está em 3, será trocado pelo terceiro ?
+        // No que o bindValue está recebendo o model que veio via parâmetro e acessamos
+        // via seta qual dado do model queremos pegar para a posição em questão.
+        $stmt->bindValue(1, $model->nome);
+        $stmt->bindValue(2, $model->email);
+        $stmt->bindValue(3, $model->cpf);
+        $stmt->bindValue(4, $model->data_nascimento);
+        $stmt->bindValue(5, $model->senha);
+
+         // Ao fim, onde todo SQL está montando, executamos a consulta.
         $stmt->execute();
 
-        return $stmt->fetchAll(DAO::FETCH_CLASS, "Api\Model\CorrentistaModel");
+        $model->id = $this->conexao->lastInsertId();
+
+        return $model;
     }
+
 
     /**
      * 
      */
-    public function search(string $query) : array
-    {
-        $str_query = ['filtro' => '%' . $query . '%'];
+    private function update(CorrentistaModel $m) {
 
-        $sql = "SELECT * FROM correntista WHERE nome LIKE :filtro ";
-
-        $stmt = $this->conexao->prepare($sql);
-        $stmt->execute($str_query);
-
-        return $stmt->fetchAll(DAO::FETCH_CLASS, "Api\Model\CorrentistaModel");
     }
 
+
     /**
-     * 
+     * Retorna um registro específico da tabela pessoa do banco de dados.
+     * Note que o método exige um parâmetro $id do tipo inteiro.
      */
-    public function insert(CorrentistaModel $m) : CorrentistaModel
+    public function selectByCpfAndSenha($cpf, $senha) : CorrentistaModel
     {
-        $sql = "INSERT INTO correntista (nome, cpf, data_nasc, senha) VALUES (?, ?, ?, ?) ";
+        $sql = "SELECT * FROM correntista WHERE cpf = ? AND senha = sha1(?) ";
 
         $stmt = $this->conexao->prepare($sql);
-        $stmt->bindValue(1, $m->nome);
-        $stmt->bindValue(2, $m->cpf);
-        $stmt->bindValue(3, $m->data_nasc);
-        $stmt->bindValue(4, $m->senha);
+        $stmt->bindValue(1, $cpf);
+        $stmt->bindValue(2, $senha);
         $stmt->execute();
 
-        $m->id = $this->conexao->lastInsertId();
-
-        return $m;
+        return $stmt->fetchObject("App\Model\CorrentistaModel"); // Retornando um objeto específico PessoaModel
     }
 
-    /**
-     * 
-     */
-    public function update(CorrentistaModel $m) : bool
-    {
-        $sql = "UPDATE correntista SET nome=?, cpf=?, data_nasc=?, senha=? WHERE id=? ";
-
-        $stmt = $this->conexao->prepare($sql);
-        $stmt->bindValue(1, $m->nome);
-        $stmt->bindValue(2, $m->cpf);
-        $stmt->bindValue(3, $m->data_nasc);
-        $stmt->bindValue(4, $m->senha);
-        $stmt->bindValue(5, $m->id);
-
-        return $stmt->execute();
-    }
 
     /**
-     * 
+     * Remove um registro da tabela pessoa do banco de dados.
+     * Note que o método exige um parâmetro $id do tipo inteiro.
      */
-    public function delete(int $id) : bool
+    /*public function delete(int $id)
     {
-        $sql = "DELETE FROM correntista WHERE id = ? ";
+        $sql = "UPDATE Reclamacao SET ativo='N' WHERE id = ? ";
 
         $stmt = $this->conexao->prepare($sql);
         $stmt->bindValue(1, $id);
-        return $stmt->execute();
-    }
+        $stmt->execute();
+    }*/
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Api\Model;
+namespace App\Model;
 
-use Api\DAO\CorrentistaDAO;
+use App\DAO\CorrentistaDAO;
 
 /**
  * A camada model é responsável por transportar os dados da Controller até a DAO e vice-versa.
@@ -12,36 +12,28 @@ use Api\DAO\CorrentistaDAO;
 class CorrentistaModel extends Model
 {
     /**
-     * 
+     * Declaração das propriedades conforme campos da tabela no banco de dados.
+     * para saber mais sobre Propriedades de Classe, leia: https://www.php.net/manual/pt_BR/language.oop5.properties.php
      */
-    public $id, $nome, $cpf, $data_nasc, $senha;
-    
+    public $id, $nome, $email, $cpf, $data_nascimento, $senha;
+
     /**
-     * 
+     * Declaração do método save que chamará a DAO para gravar no banco de dados
+     * o model preenchido.
      */
-    public function save()
+    public function save() : ?CorrentistaModel
     {
-        if($this->id == null)
-            return (new CorrentistaDAO())->insert($this);
-        else
-            return (new CorrentistaDAO())->update($this);
+        return (new CorrentistaDAO())->save($this);     
     }
 
-    /**
-     * 
-     */
-    public function getAllRows(string $query = null)
-    {
-        $dao = new CorrentistaDAO();
-
-        $this->rows = ($query == null) ? $dao->select() : $dao->search($query);
-    }
 
     /**
-     * 
+     * Método que encapsula a chamada a DAO e que abastecerá a propriedade rows;
+     * Esse método é importante pois como a model é "vista" na View a propriedade
+     * $rows será acessada e possibilitará listar os registros vindos do banco de dados
      */
-    public function delete(int $id)
-    {
-        (new CorrentistaDAO())->delete($id);
+    public function getByCpfAndSenha($cpf, $senha) : CorrentistaModel
+    {      
+        return (new CorrentistaDAO())->selectByCpfAndSenha($cpf, $senha);
     }
 }
