@@ -15,7 +15,7 @@ class ContaModel extends Model
      * Declaração das propriedades conforme campos da tabela no banco de dados.
      * para saber mais sobre Propriedades de Classe, leia: https://www.php.net/manual/pt_BR/language.oop5.properties.php
      */
-    public $id, $id_categoria, $id_cidadao, $id_bairro, $descricao, $titulo, $endereco, $latitude, $longitude, $foto;
+    public $id, $id_correntista, $saldo, $limite, $tipo, $data_abertura;
 
 
     /**

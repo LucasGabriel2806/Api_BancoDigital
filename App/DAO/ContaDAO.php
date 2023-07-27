@@ -30,13 +30,13 @@ class ContaDAO extends DAO
      * Método que recebe um model e extrai os dados do model para realizar o insert
      * na tabela correspondente ao model. Note o tipo do parâmetro declarado.
      */
-    public function insert(ContaModel $model)
+    public function insert(ContaModel $model) : ?ContaModel
     {
         // Trecho de código SQL com marcadores ? para substituição posterior, no prepare
-        $sql = "INSERT INTO Reclamacao 
-                            (id_categoria, id_cidadao, id_bairro, descricao, titulo, endereco, latitude, longitude, foto) 
+        $sql = "INSERT INTO conta 
+                            (id_correntista, saldo, limite, tipo) 
                 VALUES 
-                            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+                            (?, ?, ?, ?) ";
 
 
         // Declaração da variável stmt que conterá a montagem da consulta. Observe que
@@ -51,18 +51,17 @@ class ContaDAO extends DAO
         // determinada posição, ou seja, o valor que está em 3, será trocado pelo terceiro ?
         // No que o bindValue está recebendo o model que veio via parâmetro e acessamos
         // via seta qual dado do model queremos pegar para a posição em questão.
-        $stmt->bindValue(1, $model->id_categoria);
-        $stmt->bindValue(2, $model->id_cidadao);
-        $stmt->bindValue(3, $model->id_bairro);
-        $stmt->bindValue(4, $model->descricao);
-        $stmt->bindValue(5, $model->titulo);
-        $stmt->bindValue(6, $model->endereco);
-        $stmt->bindValue(7, $model->latitude);
-        $stmt->bindValue(8, $model->longitude);
-        $stmt->bindValue(9, $model->foto);
+        $stmt->bindValue(1, $model->id_correntista);
+        $stmt->bindValue(2, $model->saldo);
+        $stmt->bindValue(3, $model->limite);
+        $stmt->bindValue(4, $model->tipo);
 
          // Ao fim, onde todo SQL está montando, executamos a consulta.
-        return $stmt->execute();
+         $stmt->execute();
+
+         $model->id = $this->conexao->lastInsertId();
+ 
+         return $model;
     }
 
 
