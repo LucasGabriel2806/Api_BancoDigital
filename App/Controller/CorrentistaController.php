@@ -64,7 +64,7 @@ class CorrentistaController extends Controller
              * Exemplo de saída que poderá ser vista no Console do Visual Studio 2022:
              * {"rows":null,"id":"6","nome":"Giovani","email":"giovani@teste.com","cpf":"123456789","data_nascimento":"2005-02-08T00:00:00","senha":"123"}
              */
-            parent::setResponseAsJSON($model->save()); 
+            parent::getResponseAsJSON($model->save()); 
 
         } catch(Exception $e) {
             

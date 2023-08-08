@@ -16,8 +16,7 @@ switch ($url)
     case '/exportar':
         $return_var = NULL;
         $output = NULL;
-        $command = 'C:/"Program Files"/MySQL/"MySQL Server 8.0"/bin/mysqldump -uroot -petecjau -P3307 -hlocalhost db_bancodigital > 
-        C:/Dev/file.sql';
+        $command = 'C:/"Program Files"/MySQL/"MySQL Server 8.0"/bin/mysqldump -uroot -petecjau -P3307 -hlocalhost db_bancodigital > C:/Dev/file.sql';
         exec($command, $output, $exit_code);
 
         var_dump($exit_code);
