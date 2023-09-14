@@ -24,8 +24,13 @@ abstract class Controller
      */
     protected static function LogError(Exception $e)
     {
-        $f = fopen("erros.txt", "w");
-        fwrite($f, $e->getTraceAsString());
+        // Abre para edição e o retorno(resource: conexão com sistemas externos, 
+        // como arquivo) é armazenado:
+        $file = fopen("erros.txt", "w");
+        // Escreve no arquivo $file a getTraceAsString
+        fwrite($file, $e->getTraceAsString());
+        // fecha 
+        fclose($file);
     }
 
 
@@ -34,6 +39,7 @@ abstract class Controller
      */
     protected static function getExceptionAsJSON(Exception $e)
     {
+        //Array com infos sobre a exceção
         $exception = [
             'message' => $e->getMessage(), 
             'code' => $e->getCode(), 
@@ -43,14 +49,46 @@ abstract class Controller
             'previous' => $e->getPrevious()
         ];
         
+        //bad request(erro)
         http_response_code(400);
 
+        /**
+         * Essas são chamadas de instruções de cabeçalho HTTP.
+         * 
+         * 1)
+         * define a política de controle de acesso 
+         * de origem, permitindo que qualquer origem (representada por *) 
+         * acesse os recursos deste servidor. Isso é usado para permitir solicitações 
+         * cross-origin (CORS) a partir de qualquer lugar.
+         * 
+         * 2)
+         * Define o tipo de conteúdo da resposta como JSON e especifica o 
+         * conjunto de caracteres UTF-8 para codificação.
+         * 
+         * 3)
+         * Controla como os caches devem lidar com a resposta. 
+         * "no-cache" indica que os caches não devem 
+         * armazenar uma cópia em cache da resposta, e "must-revalidate" 
+         * significa que os caches devem revalidar a resposta com o servidor 
+         * antes de usá-la novamente.
+         * 
+         * 4)
+         * Define uma data de expiração para a resposta. a data é definida 
+         * como 26 de julho de 1997, que indica que a resposta não deve ser 
+         * armazenada em cache e deve ser considerada como expirada.
+         * 
+         * 5)
+         * é um cabeçalho de controle de cache que indica que a resposta 
+         * pode ser armazenada em cache publicamente (ou seja, por 
+         * qualquer cache intermediário, como servidores proxy).
+         */
         header("Access-Control-Allow-Origin: *");
         header("Content-type: application/json; charset=utf-8");
         header("Cache-Control: no-cache, must-revalidate");
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header("Pragma: public");
 
+        // Transforma infos da exceção em Json.
         exit(json_encode($exception));
     }
 

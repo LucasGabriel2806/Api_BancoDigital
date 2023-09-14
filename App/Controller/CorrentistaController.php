@@ -16,15 +16,21 @@ class CorrentistaController extends Controller
         {
             // Transformando os dados da entrada enviada do app em
             // JSON para um objeto em PHP.
-            // Obtendo os dados enviados por json via C#
+            // Obtendo os dados enviados por json via C#.
+            // file_get_contents: lê um arquivo em uma string.
+            // php://input: é um fluxo somente leitura que permite 
+            // ler dados brutos do corpo da solicitação.
             $data = json_decode(file_get_contents('php://input'));
 
             $model = new CorrentistaModel();
 
             /**
-             * Realizando o login com os dados digitados na interface do App
+             * Realizando o login com os dados digitados na interface do App.
+             * 
              * Exemplo de saída que poderá ser vista no Console do Visual Studio 2022:
-             * {"rows":null,"id":"6","nome":"Giovani","email":"giovani@teste.com","cpf":"123456789","data_nascimento":"2005-02-08T00:00:00","senha":"123"}
+             * 
+             * {"rows":null,"id":"6","nome":"Giovani","email":"giovani@teste.com",
+             * "cpf":"123456789","data_nascimento":"2005-02-08T00:00:00","senha":"123"}
              */
             parent::getResponseAsJSON($model->getByCpfAndSenha($data->Cpf, $data->Senha)); 
 
